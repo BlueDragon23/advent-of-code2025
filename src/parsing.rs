@@ -1,12 +1,23 @@
 use std::str::FromStr;
 
 use nom::{
-    character::complete::{char, digit1, space1},
-    combinator::{map_res, opt},
-    multi::separated_list1,
-    sequence::pair,
     IResult,
+    bytes::complete::tag,
+    character::complete::{char, digit1, space1},
+    combinator::{map, map_res, opt},
+    multi::separated_list1,
+    sequence::{pair, separated_pair},
 };
+use num::PrimInt;
+
+use crate::range::Range;
+
+pub fn parse_range<T: PrimInt + FromStr>(input: &str) -> IResult<&str, Range<T>> {
+    map(
+        separated_pair(parse_number, tag("-"), parse_number),
+        |(lower, upper)| Range { lower, upper },
+    )(input)
+}
 
 pub fn parse_number<T: FromStr>(input: &str) -> IResult<&str, T> {
     map_res(

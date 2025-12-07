@@ -26,7 +26,7 @@ fn main() -> Result<()> {
 
 mod parsing {
 
-    use advent_of_code2025::parsing::parse_number;
+    use advent_of_code2025::parsing::{parse_number, parse_range};
     use advent_of_code2025::range::Range;
     use color_eyre::Result;
     use nom::error::Error;
@@ -35,13 +35,7 @@ mod parsing {
     use nom::{Finish, IResult, bytes::complete::tag, combinator::map};
 
     fn parse_line(input: &str) -> IResult<&str, Vec<Range<u64>>> {
-        separated_list1(
-            tag(","),
-            map(
-                separated_pair(parse_number, tag("-"), parse_number),
-                |(lower, upper)| Range { lower, upper },
-            ),
-        )(input)
+        separated_list1(tag(","), parse_range)(input)
     }
 
     pub fn parse_input(input: &str) -> Result<Vec<Range<u64>>, Error<&str>> {
@@ -72,10 +66,16 @@ fn solve_part2(input: &Vec<Range<u64>>) -> u64 {
     input.iter().fold(0, |acc, r| {
         acc + (r.lower..=r.upper).into_iter().fold(0, |inner, x| {
             let text = x.to_string();
-            for chunk_size in 1..=(text.len()/2) {
+            for chunk_size in 1..=(text.len() / 2) {
                 if text.len() % chunk_size == 0 {
-                    if text.chars().chunks(chunk_size).into_iter().map(|chars| chars.collect_vec()).all_equal() {
-                        return inner + x
+                    if text
+                        .chars()
+                        .chunks(chunk_size)
+                        .into_iter()
+                        .map(|chars| chars.collect_vec())
+                        .all_equal()
+                    {
+                        return inner + x;
                     }
                 }
             }
