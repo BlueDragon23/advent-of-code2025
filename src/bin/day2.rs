@@ -26,13 +26,12 @@ fn main() -> Result<()> {
 
 mod parsing {
 
-    use advent_of_code2025::parsing::{parse_number, parse_range};
+    use advent_of_code2025::parsing::parse_range;
     use advent_of_code2025::range::Range;
     use color_eyre::Result;
     use nom::error::Error;
     use nom::multi::separated_list1;
-    use nom::sequence::separated_pair;
-    use nom::{Finish, IResult, bytes::complete::tag, combinator::map};
+    use nom::{Finish, IResult, bytes::complete::tag};
 
     fn parse_line(input: &str) -> IResult<&str, Vec<Range<u64>>> {
         separated_list1(tag(","), parse_range)(input)
