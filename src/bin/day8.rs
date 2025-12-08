@@ -2,7 +2,7 @@ use color_eyre::Result;
 use itertools::Itertools;
 use num::integer::sqrt;
 use petgraph::{
-    Graph, graph::UnGraph, visit::{Dfs, EdgeRef}
+    graph::UnGraph, visit::{Dfs, EdgeRef}
 };
 use std::{
     cell::RefCell,
